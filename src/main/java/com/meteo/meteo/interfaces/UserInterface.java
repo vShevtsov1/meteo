@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface UserInterface extends CrudRepository<User, Integer> {
     User getUserByIdUser(long id);
-    
+    User getUserByMailAndPassword(String mail, String password);
+    User getUserByMail(String login);
 }

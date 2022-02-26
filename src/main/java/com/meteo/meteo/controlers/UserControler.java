@@ -34,4 +34,22 @@ public class UserControler {
        return userRepository.getUserByIdUser(id);
     }
 
+    @GetMapping("/login/{login}/{password}")
+    public ResponseEntity LoginUser(@PathVariable("login")String login,@PathVariable("password") String password) {
+        User userlogin = null;
+        userlogin = userRepository.getUserByMailAndPassword(login,password);
+        if(userlogin==null)
+        {
+            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return ResponseEntity.ok(HttpStatus.OK);
+        }
+    }
+    @GetMapping("getUserByLogin/{login}")
+    public User getUserByLogin(@PathVariable("login") String login)
+    {
+        return userRepository.getUserByMail(login);
+    }
+
 }
