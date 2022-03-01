@@ -19,4 +19,11 @@ public class CompiledData {
     private String unit;
     private String value;
 
+    public CompiledData(long stationId, Date datetime, String sensor, String unit, String value) {
+        this.stationId = stationId;
+        this.datetime = datetime;
+        this.sensor = sensor;
+        this.unit = unit;
+        this.value = value;
+    }
 }
