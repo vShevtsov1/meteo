@@ -11,7 +11,6 @@ import java.util.Date;
 @Entity
 @Table(name = "CompiledData")
 public class CompiledData {
-
     @Id
     private long stationId;
     private Date datetime;

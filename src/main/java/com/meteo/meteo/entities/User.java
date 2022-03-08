@@ -3,7 +3,7 @@ package com.meteo.meteo.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+
 
 @Data
 @Entity

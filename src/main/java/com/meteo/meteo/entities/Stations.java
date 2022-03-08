@@ -21,5 +21,4 @@ public class Stations {
     private String ownerEmail;
     private String sensors;
     private String tokenId;
-
 }

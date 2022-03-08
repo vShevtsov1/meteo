@@ -23,4 +23,6 @@ public interface CompiledDataInterface extends CrudRepository<CompiledData,Integ
     String getaverage(@Param("sensor") String sensor,
                       @Param("station_id") String station_id,
                       @Param("date") Date date);
+   
+
 }
