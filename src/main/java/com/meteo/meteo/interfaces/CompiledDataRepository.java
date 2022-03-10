@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-public interface CompiledDataInterface extends CrudRepository<CompiledData,Integer> {
+public interface CompiledDataRepository extends CrudRepository<CompiledData,Integer> {
 
     List<CompiledData> getAllByStationId(long stationId);
     List<CompiledData> getAllByStationIdAndSensor(long stationId, String sensor);

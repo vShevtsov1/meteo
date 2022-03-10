@@ -1,17 +1,15 @@
 package com.meteo.meteo.controlers;
 
 import com.meteo.meteo.entities.CompiledData;
-import com.meteo.meteo.interfaces.CompiledDataInterface;
-import org.springframework.beans.factory.annotation.Autowired;
+
+
+import com.meteo.meteo.interfaces.CompiledDataRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -19,10 +17,14 @@ import java.util.List;
 @RequestMapping(path = "/CompiledData")
 public class CompiledDataControler {
 
-    @Autowired
-    private CompiledDataInterface compiledDataInterface;
 
-     @GetMapping(path = "all")
+    private CompiledDataRepository compiledDataInterface;
+
+    public CompiledDataControler(CompiledDataRepository compiledDataInterface) {
+        this.compiledDataInterface = compiledDataInterface;
+    }
+
+    @GetMapping(path = "all")
     public Iterable<CompiledData> getAll()
      {
          return compiledDataInterface.findAll();

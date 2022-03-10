@@ -1,37 +1,48 @@
 package com.meteo.meteo.controlers;
 
+import com.meteo.meteo.DTO.userDTO;
 import com.meteo.meteo.entities.User;
-import com.meteo.meteo.interfaces.UserInterface;
+import com.meteo.meteo.interfaces.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path="/users")
 public class UserControler {
-    @Autowired
-    private UserInterface userRepository;
+
+
+    private UserRepository userRepository;
+    private ModelMapper modelMapper;
+
+    public UserControler(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        // This returns a JSON or XML with the users
-        return userRepository.findAll();
+    public @ResponseBody List<userDTO> getAllUsers() {
+
+        return userRepository.getAll().stream().map(user -> modelMapper.map(user, userDTO.class)).collect(Collectors.toList());
     }
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity saveNewUser(
             @RequestBody User newUser) {
        userRepository.save(newUser);
-        System.out.println(newUser);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("getById/{id}")
-    public User getById(@PathVariable("id")long id)
+    @GetMapping("getbyid/{id}")
+    public userDTO getById(@PathVariable("id")long id)
     {
-       return userRepository.getUserByIdUser(id);
+        return modelMapper.map(userRepository.getUserByIdUser(id), userDTO.class);
     }
 
     @GetMapping("/login/{login}/{password}")
@@ -46,10 +57,10 @@ public class UserControler {
             return ResponseEntity.ok(HttpStatus.OK);
         }
     }
-    @GetMapping("getUserByLogin/{login}")
-    public User getUserByLogin(@PathVariable("login") String login)
+    @GetMapping("getuserbyemail/{email}")
+    public userDTO getUserByEmail(@PathVariable("email") String login)
     {
-        return userRepository.getUserByMail(login);
+        return modelMapper.map(userRepository.getUserByMail(login), userDTO.class);
     }
 
 }
