@@ -1,8 +1,9 @@
 package com.meteo.meteo.controlers;
 
 import com.meteo.meteo.entities.CompiledData;
-import com.meteo.meteo.interfaces.CompiledDataInterface;
 
+
+import com.meteo.meteo.interfaces.CompiledDataRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +18,9 @@ import java.util.List;
 public class CompiledDataControler {
 
 
-    private CompiledDataInterface compiledDataInterface;
+    private CompiledDataRepository compiledDataInterface;
 
-    public CompiledDataControler(CompiledDataInterface compiledDataInterface) {
+    public CompiledDataControler(CompiledDataRepository compiledDataInterface) {
         this.compiledDataInterface = compiledDataInterface;
     }
 

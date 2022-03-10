@@ -18,4 +18,18 @@ public class User {
     private String mail;
     private String role;
     private String password;
+
+    public User(long idUser, String name, String surname, String dateOfBirth, String mail, String role, String password) {
+        this.idUser = idUser;
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = dateOfBirth;
+        this.mail = mail;
+        this.role = role;
+        this.password = password;
+    }
+
+    public User() {
+
+    }
 }
