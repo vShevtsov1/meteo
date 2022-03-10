@@ -2,7 +2,7 @@ package com.meteo.meteo.controlers;
 
 import com.meteo.meteo.entities.Stations;
 import com.meteo.meteo.interfaces.stationsInterface;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +13,12 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/stations")
 public class StationsControler {
-    @Autowired
+
     private stationsInterface stationsInterface;
+
+    public StationsControler(stationsInterface stationsInterface) {
+        this.stationsInterface = stationsInterface;
+    }
 
     protected static SecureRandom random = new SecureRandom();
 
