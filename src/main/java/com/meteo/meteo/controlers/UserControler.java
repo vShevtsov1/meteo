@@ -27,6 +27,10 @@ public class UserControler {
         this.modelMapper = modelMapper;
     }
 
+    public UserControler(UserInterface userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @GetMapping(path="/all")
     public @ResponseBody List<userDTO> getAllUsers() {
 

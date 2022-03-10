@@ -21,6 +21,10 @@ public class StationsControler {
         this.stationsInterface = stationsInterface;
     }
 
+    public StationsControler(stationsInterface stationsInterface) {
+        this.stationsInterface = stationsInterface;
+    }
+
     protected static SecureRandom random = new SecureRandom();
 
     @GetMapping(path = "/all")
