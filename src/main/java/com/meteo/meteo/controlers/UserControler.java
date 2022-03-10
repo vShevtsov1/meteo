@@ -2,18 +2,19 @@ package com.meteo.meteo.controlers;
 
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.interfaces.UserInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path="/users")
 public class UserControler {
-    @Autowired
+
     private UserInterface userRepository;
+
+    public UserControler(UserInterface userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<User> getAllUsers() {
