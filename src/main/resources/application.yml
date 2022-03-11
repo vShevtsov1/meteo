@@ -1,0 +1,16 @@
+server:
+    port: 8070
+spring:
+    datasource:
+        url: jdbc:mysql://localhost/meteo?user=root&password=Password&serverTimezone=Europe/Bratislava&createDatabaseIfNotExist=true
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                globally_quoted_identifiers: true
+        show-sql: true
+    security:
+        user:
+            name: admin
+            password: admin
