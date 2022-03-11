@@ -24,24 +24,25 @@ public class CompiledDataControler {
         this.compiledDataRepoditory = compiledDataRepoditory;
     }
 
-    @GetMapping(path = "all")
+    @GetMapping()
     public Iterable<CompiledData> getAll()
      {
          return compiledDataRepoditory.findAll();
      }
 
-     @GetMapping(path = "getAllById/{id}")
+     @GetMapping(path = "id/{id}")
     public List<CompiledData> getById(@PathVariable("id") long id)
      {
          return compiledDataRepoditory.getAllByStationId(id);
      }
 
-     @GetMapping(path = "getAllByIdAndSensor/{id}/{sensor}")
+     @GetMapping(path = "idandsensor/{id}/{sensor}")
      public List<CompiledData> getAllByIdAndSensor(@PathVariable("id") long id, @PathVariable("sensor")String sensor)
      {
          return compiledDataRepoditory.getAllByStationIdAndSensor(id,sensor);
      }
-    @GetMapping(path = "getAllByIdAndSensorAndDate/{id}/{sensor}/{date}")
+
+    @GetMapping(path = "last-values/{id}/{sensor}/{date}")
     public List<CompiledData> getAllByIdAndSensorAndDate(@PathVariable("id") String id,
                                                          @PathVariable("sensor")String sensor,
                                                          @PathVariable("date") String date)
@@ -51,7 +52,7 @@ public class CompiledDataControler {
         Date dateBefore = Date.from(before);
         return compiledDataRepoditory.getAllByStationIdAndSensorAndDatetimeAfter(sensor,id,dateBefore);
     }
-    @GetMapping(path = "avg/{id}/{sensor}/{date}")
+    @GetMapping(path = "last-avg/{id}/{sensor}/{date}")
     public String avgValue(@PathVariable("id") String id,
                       @PathVariable("sensor")String sensor,
                       @PathVariable("date") String date)

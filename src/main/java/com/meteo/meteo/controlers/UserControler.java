@@ -4,7 +4,6 @@ import com.meteo.meteo.DTO.userDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.interfaces.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +22,8 @@ public class UserControler {
     }
 
 
-    @GetMapping(path="/all")
+    @GetMapping()
     public @ResponseBody Iterable<User> getAllUsers() {
-        // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
     @PostMapping("/save")
@@ -35,7 +33,7 @@ public class UserControler {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("getById/{id}")
+    @GetMapping("id/{id}")
     public User getById(@PathVariable("id")long id)
     {
        return userRepository.getUserByIdUser(id);
@@ -53,7 +51,7 @@ public class UserControler {
             return ResponseEntity.ok(HttpStatus.OK);
         }
     }
-    @GetMapping("getuserbyemail/{email}")
+    @GetMapping("email/{email}")
     public userDTO getUserByEmail(@PathVariable("email") String login)
     {
         return modelMapper.map(userRepository.getUserByMail(login), userDTO.class);
