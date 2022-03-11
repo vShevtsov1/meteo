@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(path="/users")
 public class UserControler {
@@ -21,10 +23,9 @@ public class UserControler {
         this.modelMapper = modelMapper;
     }
 
-
     @GetMapping()
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public @ResponseBody Iterable<userDTO> getAllUsers() {
+        return userRepository.getAll().stream().map(user -> modelMapper.map(user, userDTO.class)).collect(Collectors.toList());
     }
     @PostMapping("/save")
     public ResponseEntity saveNewUser(
@@ -34,9 +35,9 @@ public class UserControler {
     }
 
     @GetMapping("id/{id}")
-    public User getById(@PathVariable("id")long id)
+    public userDTO getById(@PathVariable("id")long id)
     {
-       return userRepository.getUserByIdUser(id);
+       return modelMapper.map(userRepository.getUserByIdUser(id), userDTO.class);
     }
 
     @GetMapping("/login/{login}/{password}")
@@ -52,9 +53,9 @@ public class UserControler {
         }
     }
     @GetMapping("email/{email}")
-    public userDTO getUserByEmail(@PathVariable("email") String login)
+    public userDTO getUserByEmail(@PathVariable("email") String email)
     {
-        return modelMapper.map(userRepository.getUserByMail(login), userDTO.class);
+        return modelMapper.map(userRepository.getUserByMail(email), userDTO.class);
     }
 
 }

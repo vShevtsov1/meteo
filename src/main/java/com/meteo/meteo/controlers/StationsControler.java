@@ -22,20 +22,18 @@ public class StationsControler {
     }
 
 
-    protected static SecureRandom random = new SecureRandom();
-
-    @GetMapping(path = "/all")
+    @GetMapping()
     public @ResponseBody
     Iterable<Stations> getAll() {
         return stationsRepository.findAll();
     }
 
-    @GetMapping(path = "getById/{id}")
+    @GetMapping(path = "id/{id}")
     public Stations getById(@PathVariable("id") long id) {
         return stationsRepository.getStationsByIdStations(id);
     }
 
-    @GetMapping(path = "getByOwnerMail/{email}")
+    @GetMapping(path = "ownermail/{email}")
     public List<Stations> getByOwnerMail(@PathVariable("email") String email)
     {
         return stationsRepository.getStationsByOwnerEmail(email);
