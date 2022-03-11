@@ -41,7 +41,7 @@ public class StationsControler {
         return stationsRepository.getStationsByOwnerEmail(email);
     }
 
-    @GetMapping("/save")
+    @PostMapping("/save")
     public String saveNewStations(@RequestBody Stations newStation) {
         long longToken = Math.abs( random.nextLong() );
         String random = Long.toString( longToken, 16 );
@@ -49,7 +49,7 @@ public class StationsControler {
         stationsRepository.save(newStation);
         return newStation.getTokenId();
     }
-    @GetMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity updateStations(@RequestBody Stations stations)
     {
         stationsRepository.save(stations);

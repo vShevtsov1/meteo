@@ -28,11 +28,10 @@ public class UserControler {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity saveNewUser(
             @RequestBody User newUser) {
        userRepository.save(newUser);
-        System.out.println(newUser);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
