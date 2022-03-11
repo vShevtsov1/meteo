@@ -20,6 +20,5 @@ public class Stations {
     private String name;
     private String ownerEmail;
     private String sensors;
-    private String tokenId;
 
 }
