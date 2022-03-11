@@ -42,12 +42,8 @@ public class StationsControler {
     }
 
     @PostMapping("/save")
-    public String saveNewStations(@RequestBody Stations newStation) {
-        long longToken = Math.abs( random.nextLong() );
-        String random = Long.toString( longToken, 16 );
-        newStation.setTokenId(random);
+    public void saveNewStations(@RequestBody Stations newStation) {
         stationsRepository.save(newStation);
-        return newStation.getTokenId();
     }
     @PostMapping("/update")
     public ResponseEntity updateStations(@RequestBody Stations stations)
