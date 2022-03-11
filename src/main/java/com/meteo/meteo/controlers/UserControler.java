@@ -9,11 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping(path="/users")
 public class UserControler {
@@ -27,26 +22,24 @@ public class UserControler {
         this.modelMapper = modelMapper;
     }
 
-    public UserControler(UserInterface userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @GetMapping(path="/all")
-    public @ResponseBody List<userDTO> getAllUsers() {
-
-        return userRepository.getAll().stream().map(user -> modelMapper.map(user, userDTO.class)).collect(Collectors.toList());
+    public @ResponseBody Iterable<User> getAllUsers() {
+        // This returns a JSON or XML with the users
+        return userRepository.findAll();
     }
-    @PostMapping("/save")
+    @GetMapping("/save")
     public ResponseEntity saveNewUser(
             @RequestBody User newUser) {
        userRepository.save(newUser);
+        System.out.println(newUser);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("getbyid/{id}")
-    public userDTO getById(@PathVariable("id")long id)
+    @GetMapping("getById/{id}")
+    public User getById(@PathVariable("id")long id)
     {
-        return modelMapper.map(userRepository.getUserByIdUser(id), userDTO.class);
+       return userRepository.getUserByIdUser(id);
     }
 
     @GetMapping("/login/{login}/{password}")
