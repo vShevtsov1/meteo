@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.meteo.meteo.services.userServices;
 import java.util.stream.Collectors;
 
 @RestController
@@ -17,10 +17,12 @@ public class UserControler {
 
     private UserRepository userRepository;
     private ModelMapper modelMapper;
+    private userServices userServices;
 
-    public UserControler(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserControler(UserRepository userRepository, ModelMapper modelMapper, com.meteo.meteo.services.userServices userServices) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.userServices = userServices;
     }
 
     @GetMapping()
@@ -41,7 +43,7 @@ public class UserControler {
     }
 
     @GetMapping("/login/{login}/{password}")
-    public ResponseEntity LoginUser(@PathVariable("login")String login,@PathVariable("password") String password) {
+    public Object LoginUser(@PathVariable("login")String login,@PathVariable("password") String password) {
         User userlogin = null;
         userlogin = userRepository.getUserByMailAndPassword(login,password);
         if(userlogin==null)
@@ -49,7 +51,7 @@ public class UserControler {
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
         else {
-            return ResponseEntity.ok(HttpStatus.OK);
+            return userServices.generateToken(login);
         }
     }
     @GetMapping("email/{email}")
