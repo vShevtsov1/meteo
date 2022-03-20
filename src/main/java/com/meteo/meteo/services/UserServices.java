@@ -1,6 +1,7 @@
 package com.meteo.meteo.services;
 
 import com.meteo.meteo.entities.User;
+import com.meteo.meteo.exceptions.TokenException;
 import com.meteo.meteo.interfaces.UserRepository;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,15 +58,15 @@ public class UserServices {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
-            System.out.println("Token expired");
+            new TokenException("Token expired");
         } catch (UnsupportedJwtException unsEx) {
-            System.out.println("Unsupported jwt");
+            new TokenException("Unsupported jwt");
         } catch (MalformedJwtException mjEx) {
-            System.out.println("Malformed jwt");
+            new TokenException("Malformed jwt");
         } catch (SignatureException sEx) {
-            System.out.println("Invalid signature");
+            new TokenException("Invalid signature");
         } catch (Exception e) {
-            System.out.println("invalid token");
+            new TokenException("invalid token");
         }
         return false;
     }
