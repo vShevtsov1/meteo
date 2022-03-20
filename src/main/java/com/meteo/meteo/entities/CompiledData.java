@@ -25,4 +25,8 @@ public class CompiledData {
         this.unit = unit;
         this.value = value;
     }
+
+    public CompiledData() {
+
+    }
 }

@@ -3,21 +3,20 @@ package com.meteo.meteo.controlers;
 import com.meteo.meteo.entities.Stations;
 
 
-import com.meteo.meteo.interfaces.stationsRepository;
+import com.meteo.meteo.interfaces.StationsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/stations")
 public class StationsControler {
 
-    private stationsRepository stationsRepository;
+    private StationsRepository stationsRepository;
 
-    public StationsControler(stationsRepository stationsRepository) {
+    public StationsControler(StationsRepository stationsRepository) {
         this.stationsRepository = stationsRepository;
     }
 
