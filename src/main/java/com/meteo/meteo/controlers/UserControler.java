@@ -3,6 +3,7 @@ package com.meteo.meteo.controlers;
 import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.interfaces.UserRepository;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.modelmapper.ModelMapper;
@@ -37,7 +38,7 @@ public class UserControler {
     @PostMapping("/save")
     public ResponseEntity saveNewUser(
             @Parameter(description = "json body with info about user") @RequestBody User newUser) {
-       userRepository.save(newUser);
+        userRepository.save(newUser);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -66,4 +67,10 @@ public class UserControler {
         return userServices.validateToken(token);
     }
 
+    @GetMapping("test")
+    public void test()
+    {
+        String claims = userServices.getUserRole("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwibmFtZSI6IjEiLCJzdXJuYW1lIjoiMSIsInJvbGUiOiIxIiwiZXhwIjoxNjQ4MDQ3MTQ5fQ.ST6CbZGa7XP6wU27kgJGg-f4xUk6kVMn8Y0x7UvEILU");
+        System.out.println(claims);
+    }
 }

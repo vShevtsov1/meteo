@@ -75,7 +75,8 @@ public class CompiledDataControler {
         return compiledDataRepoditory.getaverage(sensor,id,compiledDataService.getDateBefore(days));
     }
     @Operation(summary = "Save values received from stations to database with a check for the validity of the user token")
-    @GetMapping("savevalue")
+
+    @GetMapping ("/savevalue")
     public String save(@Parameter(description = "Received json with data from station and token") @RequestBody String json) throws ParseException {
         compiledDataService.setDataToTable(json);
         return json;

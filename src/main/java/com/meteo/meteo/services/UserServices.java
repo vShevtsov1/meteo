@@ -7,6 +7,8 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,7 +21,7 @@ import java.util.Date;
 
 @Service
 public class UserServices {
-    @Value("$(jwt.secret)")
+    @Value("${jwt.secret}")
     private String jwtSecret;
     private UserRepository userRepository;
 
@@ -36,11 +38,13 @@ public class UserServices {
                 claim("role",user.getRole()).
                 setExpiration(date).
                 signWith(SignatureAlgorithm.HS256,jwtSecret).compact();
+        System.out.println(jwtSecret);
         return jws;
     }
 
     public Object login(String login,String password)
     {
+       // BCryptPasswordEncoder
         User userlogin = null;
         userlogin = userRepository.getUserByMailAndPassword(login,password);
         if(userlogin==null)
@@ -71,5 +75,21 @@ public class UserServices {
         return false;
     }
 
+    public String getUserRole(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return (String) claims.get("role");
+    }
+
+
+    public String getUserMail(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+    }
 
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.meteo.meteo.entities.CompiledData;
+import com.meteo.meteo.exceptions.TokenException;
 import com.meteo.meteo.interfaces.CompiledDataRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,12 +54,16 @@ public class CompiledDataService {
                 (String) mapa.get("unit"), (String) mapa.get("value"));
         System.out.println(mapa);
         String token = String.valueOf(mapa.get("token"));
-
-        if (userServices.validateToken(token) == true) {
-            compiledDataRepository.save(compData);
-            return token;
-        } else {
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+        try{
+            if (userServices.validateToken(token) == true) {
+                compiledDataRepository.save(compData);
+                return token;
+            } else {
+                return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (TokenException e){
+            return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
         }
     }
 }
