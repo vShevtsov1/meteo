@@ -1,8 +1,12 @@
+package com.meteo.meteo;
+
 import com.meteo.meteo.interfaces.UserRepository;
 import com.meteo.meteo.services.UserServices;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +19,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.List.of;
 import static java.util.Optional.ofNullable;
@@ -24,8 +30,8 @@ import static org.springframework.util.StringUtils.isEmpty;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
+    @Autowired
     private UserServices userServices;
-    private final UserRepository userRepo;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -33,7 +39,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
         // Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (isEmpty(header) || !header.startsWith("Bearer ")) {
+
+
+        if (header==null || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
@@ -44,15 +52,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
-        UserDetails userDetails = User.builder().username(
-                userServices.getUserMail(token)).roles(userServices.getUserRole(token)).build();
+
+        
         // Get user identity and set it on the spring security context
-
-
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null,
-                ofNullable(userDetails).map(UserDetails::getAuthorities).orElse(of())
-        );
+                userServices.getUserMail(token), null, List.of(new SimpleGrantedAuthority(userServices.getUserRole(token))));
         authentication
                 .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
