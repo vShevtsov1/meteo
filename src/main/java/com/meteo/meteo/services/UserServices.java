@@ -44,14 +44,12 @@ public class UserServices {
 
     public Object login(String login,String password)
     {
-       // BCryptPasswordEncoder
         User userlogin = null;
-        userlogin = userRepository.getUserByMailAndPassword(login,password);
-        if(userlogin==null)
-        {
+        userlogin = userRepository.getUserForLogin(login);
+        if(new BCryptPasswordEncoder().matches(password,userlogin.getPassword()) == false || userlogin==null){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
-        else {
+        {
             String f = generateToken(userlogin);
             return f;
         }
