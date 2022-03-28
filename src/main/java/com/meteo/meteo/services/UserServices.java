@@ -1,14 +1,17 @@
 package com.meteo.meteo.services;
 
+import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.exceptions.TokenException;
 import com.meteo.meteo.interfaces.UserRepository;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,15 +21,20 @@ import java.time.LocalDateTime;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServices {
     @Value("${jwt.secret}")
     private String jwtSecret;
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public UserServices(UserRepository userRepository) {
+
+    public UserServices(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String generateToken(User user) {
@@ -46,7 +54,7 @@ public class UserServices {
     {
         User userlogin = null;
         userlogin = userRepository.getUserForLogin(login);
-        if(new BCryptPasswordEncoder().matches(password,userlogin.getPassword()) == false || userlogin==null){
+        if(passwordEncoder.matches(password,userlogin.getPassword()) == false || userlogin==null){
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
         {
@@ -59,15 +67,7 @@ public class UserServices {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException expEx) {
-            new TokenException("Token expired");
-        } catch (UnsupportedJwtException unsEx) {
-            new TokenException("Unsupported jwt");
-        } catch (MalformedJwtException mjEx) {
-            new TokenException("Malformed jwt");
-        } catch (SignatureException sEx) {
-            new TokenException("Invalid signature");
-        } catch (Exception e) {
+        } catch (JwtException e) {
             new TokenException("invalid token");
         }
         return false;
@@ -90,4 +90,10 @@ public class UserServices {
         return claims.getSubject();
     }
 
+    public List<User> getAll()
+    {
+        return userRepository.getAll();
+    }
+
 }
+

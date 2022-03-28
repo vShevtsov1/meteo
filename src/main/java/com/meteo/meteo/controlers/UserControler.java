@@ -18,13 +18,10 @@ import java.util.stream.Collectors;
 @RequestMapping(path="/users")
 public class UserControler {
 
-
-    private UserRepository userRepository;
     private ModelMapper modelMapper;
     private UserServices userServices;
 
-    public UserControler(UserRepository userRepository, ModelMapper modelMapper, UserServices userServices) {
-        this.userRepository = userRepository;
+    public UserControler(ModelMapper modelMapper, UserServices userServices) {
         this.modelMapper = modelMapper;
         this.userServices = userServices;
     }
@@ -32,7 +29,7 @@ public class UserControler {
     @Operation(summary = "Get all users")
     @GetMapping()
     public @ResponseBody Iterable<UserDTO> getAllUsers() {
-        return userRepository.getAll().stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
+        return userServices.getAll().stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
     }
 
     @Operation(summary = "Save new user")
@@ -51,7 +48,7 @@ public class UserControler {
     }
 
     @Operation(summary = "login a user into application")
-    @GetMapping("/login/{login}/{password}")
+    @PostMapping("/login")
     public Object LoginUser(@PathVariable("login")String login,@PathVariable("password") String password) {
         return userServices.login(login,password);
     }
@@ -68,10 +65,4 @@ public class UserControler {
         return userServices.validateToken(token);
     }
 
-    @GetMapping("test")
-    public void test()
-    {
-        String claims = userServices.getUserRole("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwibmFtZSI6IjEiLCJzdXJuYW1lIjoiMSIsInJvbGUiOiIxIiwiZXhwIjoxNjQ4MDQ3MTQ5fQ.ST6CbZGa7XP6wU27kgJGg-f4xUk6kVMn8Y0x7UvEILU");
-        System.out.println(claims);
-    }
 }

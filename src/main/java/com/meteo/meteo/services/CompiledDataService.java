@@ -50,20 +50,10 @@ public class CompiledDataService {
         } catch (JsonProcessingException ex) {
             ex.printStackTrace();
         }
-        CompiledData compData = new CompiledData( Long.parseLong(String.valueOf(mapa.get("stationId"))), new SimpleDateFormat("yyyy-mm-dd").parse(String.valueOf(mapa.get("datetime"))), (String) mapa.get("sensor"),
+        CompiledData compData = new CompiledData(Long.parseLong(String.valueOf(mapa.get("stationId"))), new SimpleDateFormat("yyyy-mm-dd").parse(String.valueOf(mapa.get("datetime"))), (String) mapa.get("sensor"),
                 (String) mapa.get("unit"), (String) mapa.get("value"));
         System.out.println(mapa);
         String token = String.valueOf(mapa.get("token"));
-        try{
-            if (userServices.validateToken(token) == true) {
-                compiledDataRepository.save(compData);
-                return token;
-            } else {
-                return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
-            }
-        }
-        catch (TokenException e){
-            return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
-        }
+    }
     }
 }

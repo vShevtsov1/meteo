@@ -56,7 +56,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         
         // Get user identity and set it on the spring security context
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userServices.getUserMail(token), null, List.of(new SimpleGrantedAuthority(userServices.getUserRole(token))));
+                userServices.getUserMail(token), null, List.of(new SimpleGrantedAuthority("ROLE_"+userServices.getUserRole(token))));
         authentication
                 .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
