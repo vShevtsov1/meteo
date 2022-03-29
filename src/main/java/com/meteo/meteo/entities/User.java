@@ -19,8 +19,7 @@ public class User {
     private String role;
     private String password;
 
-    public User(long idUser, String name, String surname, String dateOfBirth, String mail, String role, String password) {
-        this.idUser = idUser;
+    public User(String name, String surname, String dateOfBirth, String mail, String role, String password) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -32,4 +31,6 @@ public class User {
     public User() {
 
     }
+
+
 }

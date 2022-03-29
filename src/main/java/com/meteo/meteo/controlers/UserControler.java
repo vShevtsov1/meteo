@@ -1,6 +1,7 @@
 package com.meteo.meteo.controlers;
 
 import com.meteo.meteo.DTO.LoginDTO;
+import com.meteo.meteo.DTO.RegisterDTO;
 import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.interfaces.UserRepository;
@@ -35,10 +36,9 @@ public class UserControler {
 
     @Operation(summary = "Save new user")
     @PostMapping("/save")
-    public ResponseEntity saveNewUser(
-            @Parameter(description = "json body with info about user") @RequestBody User newUser) {
-        userServices.save(newUser);
-        return ResponseEntity.ok(HttpStatus.OK);
+    public UserDTO saveNewUser(
+            @Parameter(description = "json body with info about user") @RequestBody RegisterDTO registerDTO) {
+        return modelMapper.map(userServices.save(registerDTO),UserDTO.class);
     }
 
     @Operation(summary = "Save new user")

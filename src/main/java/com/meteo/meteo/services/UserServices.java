@@ -1,6 +1,7 @@
 package com.meteo.meteo.services;
 
 import com.meteo.meteo.DTO.LoginDTO;
+import com.meteo.meteo.DTO.RegisterDTO;
 import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.exceptions.TokenException;
@@ -104,8 +105,9 @@ public class UserServices {
         return userRepository.getUserByMail(login);
     }
 
-    public void save(User newUser) {
-        userRepository.save(newUser);
+    public User save(RegisterDTO registerDTO) {
+         return userRepository.save(new User(registerDTO.getName(),registerDTO.getSurname(),registerDTO.getDateOfBirth()
+         ,registerDTO.getMail(),"user",passwordEncoder.encode(registerDTO.getPassword())));
     }
 
 
