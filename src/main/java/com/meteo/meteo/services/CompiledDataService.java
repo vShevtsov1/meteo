@@ -5,9 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.meteo.meteo.DTO.CompiledDataDTO;
 import com.meteo.meteo.entities.CompiledData;
 import com.meteo.meteo.exceptions.TokenException;
 import com.meteo.meteo.interfaces.CompiledDataRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,20 +43,32 @@ public class CompiledDataService {
         return dateBefore;
     }
 
-    public Object setDataToTable(String json) throws ParseException {
-        ObjectMapper json1 = new ObjectMapper();
-        Map<String, Object> mapa = null;
-        try {
-            mapa = json1.readValue(json, HashMap.class);
-        } catch (JsonMappingException ex) {
-            ex.printStackTrace();
-        } catch (JsonProcessingException ex) {
-            ex.printStackTrace();
-        }
-        CompiledData compData = new CompiledData(Long.parseLong(String.valueOf(mapa.get("stationId"))), new SimpleDateFormat("yyyy-mm-dd").parse(String.valueOf(mapa.get("datetime"))), (String) mapa.get("sensor"),
-                (String) mapa.get("unit"), (String) mapa.get("value"));
-        System.out.println(mapa);
-        String token = String.valueOf(mapa.get("token"));
+    public void setDataToTable(CompiledDataDTO json) throws ParseException {
+       compiledDataRepository.save(new CompiledData(json.getStationId(), json.getDatetime(), json.getSensor(), json.getUnit(), json.getValue()));
     }
+
+    public Iterable<CompiledData> findAll()
+    {
+        return compiledDataRepository.findAll();
+    }
+
+    public List<CompiledData> getAllByStationId(long stationId){
+        return compiledDataRepository.getAllByStationId(stationId);
+    }
+
+    public List<CompiledData> getAllByStationIdAndSensor(long stationId, String sensor){
+        return compiledDataRepository.getAllByStationIdAndSensor(stationId, sensor);
+    }
+
+    public List<CompiledData> getAllByStationIdAndSensorAndDatetimeAfter(String sensor,
+                                                                  String station_id,
+                                                                  Date date){
+        return compiledDataRepository.getAllByStationIdAndSensorAndDatetimeAfter(sensor, station_id, date);
+    }
+
+    public String getaverage(String sensor,
+                             String station_id,
+                             Date date){
+        return compiledDataRepository.getaverage(sensor, station_id, date);
     }
 }

@@ -1,5 +1,6 @@
 package com.meteo.meteo.services;
 
+import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.exceptions.TokenException;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,20 +43,19 @@ public class UserServices {
         Date date = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
         String jws = Jwts.builder().
                 setSubject(user.getMail()).
-                claim("name",user.getName()).
-                claim("surname",user.getSurname()).
-                claim("role",user.getRole()).
+                claim("name", user.getName()).
+                claim("surname", user.getSurname()).
+                claim("role", user.getRole()).
                 setExpiration(date).
-                signWith(SignatureAlgorithm.HS256,jwtSecret).compact();
+                signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
         System.out.println(jwtSecret);
         return jws;
     }
 
-    public Object login(String login,String password)
-    {
+    public Object login(LoginDTO loginDTO) {
         User userlogin = null;
-        userlogin = userRepository.getUserForLogin(login);
-        if(passwordEncoder.matches(password,userlogin.getPassword()) == false || userlogin==null){
+        userlogin = userRepository.getUserForLogin(loginDTO.getUsername());
+        if (passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) == false || userlogin == null) {
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
         {
@@ -90,10 +91,22 @@ public class UserServices {
         return claims.getSubject();
     }
 
-    public List<User> getAll()
-    {
+    public List<User> getAll() {
         return userRepository.getAll();
     }
+
+    public User getUserByIdUser(long id) {
+        return userRepository.getUserByIdUser(id);
+    }
+
+    public UserDTO getUserByMail(String login) {
+        return userRepository.getUserByMail(login);
+    }
+
+    public void save(User newUser) {
+        userRepository.save(newUser);
+    }
+
 
 }
 

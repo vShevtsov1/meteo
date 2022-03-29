@@ -1,5 +1,6 @@
 package com.meteo.meteo.controlers;
 
+import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.interfaces.UserRepository;
@@ -36,7 +37,7 @@ public class UserControler {
     @PostMapping("/save")
     public ResponseEntity saveNewUser(
             @Parameter(description = "json body with info about user") @RequestBody User newUser) {
-        userRepository.save(newUser);
+        userServices.save(newUser);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -44,19 +45,19 @@ public class UserControler {
     @GetMapping("id/{id}")
     public UserDTO getById( @Parameter(description = "id of user to be searched")@PathVariable("id")long id)
     {
-       return modelMapper.map(userRepository.getUserByIdUser(id), UserDTO.class);
+       return modelMapper.map(userServices.getUserByIdUser(id), UserDTO.class);
     }
 
     @Operation(summary = "login a user into application")
     @PostMapping("/login")
-    public Object LoginUser(@PathVariable("login")String login,@PathVariable("password") String password) {
-        return userServices.login(login,password);
+    public Object LoginUser(LoginDTO loginDTO) {
+        return userServices.login(loginDTO);
     }
     @Operation(summary = "Get user by e-mail")
     @GetMapping("email/{email}")
     public UserDTO getUserByEmail(@PathVariable("email") String email)
     {
-        return modelMapper.map(userRepository.getUserByMail(email), UserDTO.class);
+        return modelMapper.map(userServices.getUserByMail(email), UserDTO.class);
     }
     @Operation(summary = "CHeck token validity")
     @GetMapping(path = "valid/{toke}")

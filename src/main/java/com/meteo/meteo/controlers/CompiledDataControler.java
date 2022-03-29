@@ -1,5 +1,6 @@
 package com.meteo.meteo.controlers;
 
+import com.meteo.meteo.DTO.CompiledDataDTO;
 import com.meteo.meteo.entities.CompiledData;
 
 
@@ -7,6 +8,8 @@ import com.meteo.meteo.interfaces.CompiledDataRepository;
 import com.meteo.meteo.services.CompiledDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -20,25 +23,24 @@ import java.util.List;
 public class CompiledDataControler {
 
 
-    private CompiledDataRepository compiledDataRepoditory;
+
     private CompiledDataService compiledDataService;
 
-    public CompiledDataControler(CompiledDataRepository compiledDataRepoditory, CompiledDataService compiledDataService) {
-        this.compiledDataRepoditory = compiledDataRepoditory;
+    public CompiledDataControler(CompiledDataService compiledDataService) {
         this.compiledDataService = compiledDataService;
     }
     @Operation(summary = "Get all data")
     @GetMapping()
     public Iterable<CompiledData> getAll()
      {
-         return compiledDataRepoditory.findAll();
+         return compiledDataService.findAll();
      }
     @Operation(summary = "Get all data by station id")
      @GetMapping(path = "id/{id}")
     public List<CompiledData> getById(@Parameter(description = "station id")
             @PathVariable("id") long id)
      {
-         return compiledDataRepoditory.getAllByStationId(id);
+         return compiledDataService.getAllByStationId(id);
      }
 
     @Operation(summary = "Get all data by station id and sensor")
@@ -48,7 +50,7 @@ public class CompiledDataControler {
                                                    @Parameter(description = "sensor of station")
                                                        @PathVariable("sensor")String sensor)
      {
-         return compiledDataRepoditory.getAllByStationIdAndSensor(id,sensor);
+         return compiledDataService.getAllByStationIdAndSensor(id,sensor);
      }
 
     @Operation(summary = "Get all data by station id, sensor and the date the data was sent ")
@@ -60,7 +62,7 @@ public class CompiledDataControler {
                                                          @Parameter(description = "date when the data was sent")
                                                          @PathVariable("days") long days)
     {
-        return compiledDataRepoditory.getAllByStationIdAndSensorAndDatetimeAfter(sensor,id, compiledDataService.getDateBefore(days));
+        return compiledDataService.getAllByStationIdAndSensorAndDatetimeAfter(sensor,id, compiledDataService.getDateBefore(days));
     }
     @Operation(summary = "Return average value")
     @GetMapping(path = "last-avg/{id}/{sensor}/{days}")
@@ -71,13 +73,19 @@ public class CompiledDataControler {
                            @Parameter(description = "date when the data was sent")
                                @PathVariable("days") long days)
     {
-        return compiledDataRepoditory.getaverage(sensor,id,compiledDataService.getDateBefore(days));
+        return compiledDataService.getaverage(sensor,id,compiledDataService.getDateBefore(days));
     }
 
     @Operation(summary = "Save values received from stations to database with a check for the validity of the user token")
     @GetMapping ("/savevalue")
-    public String save(@Parameter(description = "Received json with data from station and token") String json) throws ParseException {
-        compiledDataService.setDataToTable(json);
-        return json;
+    public Object save(@Parameter(description = "Received json with data from station and token") CompiledDataDTO compiledDataDTO) throws ParseException {
+        try {
+            compiledDataService.setDataToTable(compiledDataDTO);
+            return ResponseEntity.ok(HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        }
     }
 }
