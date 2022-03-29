@@ -14,6 +14,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     User getUserByIdUser(long id);
     User getUserByMailAndPassword(String mail, String password);
     UserDTO getUserByMail(String login);
+
     @Query("select u from User  u where mail = :login")
     User getUserForLogin(String login);
 }

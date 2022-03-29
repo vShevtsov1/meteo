@@ -53,6 +53,7 @@ public class UserServices {
     }
 
     public Object login(LoginDTO loginDTO) {
+        System.out.println(loginDTO);
         User userlogin = null;
         userlogin = userRepository.getUserForLogin(loginDTO.getUsername());
         if (passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) == false || userlogin == null) {
