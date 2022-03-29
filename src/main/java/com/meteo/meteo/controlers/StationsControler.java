@@ -44,13 +44,13 @@ public class StationsControler {
 
     @Operation(summary = "Save a new station")
     @PostMapping("/save")
-    public void saveNewStations(Stations newStation) {
+    public void saveNewStations(@RequestBody Stations newStation) {
         stationServices.save(newStation);
     }
 
     @Operation(summary = "update info about the station")
     @PostMapping("/update")
-    public ResponseEntity updateStations(Stations stations)
+    public ResponseEntity updateStations(@RequestBody Stations stations)
     {
         stationServices.save(stations);
         return ResponseEntity.ok(HttpStatus.OK);
