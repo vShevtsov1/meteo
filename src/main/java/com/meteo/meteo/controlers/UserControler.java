@@ -51,10 +51,12 @@ public class UserControler {
     @Operation(summary = "login a user into application")
     @PostMapping("/login")
     public ResponseEntity<JwtDTO> LoginUser(@RequestBody LoginDTO loginDTO) {
+        System.out.println(loginDTO);
         JwtDTO jwtDTO = userServices.login(loginDTO);
         if(jwtDTO!=null)
         {
             return ResponseEntity.ok(jwtDTO);
+
         }
         return ResponseEntity.badRequest().build();
     }

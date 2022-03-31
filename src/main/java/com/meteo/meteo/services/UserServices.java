@@ -50,6 +50,7 @@ public class UserServices {
         return jws;
     }
     public JwtDTO login(LoginDTO loginDTO) {
+        System.out.println(loginDTO);
         User userlogin =userRepository.getUserForLogin(loginDTO.getEmail());
         if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null||userlogin.getActive()==false
         ) {
