@@ -1,5 +1,6 @@
 package com.meteo.meteo.services;
 
+import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.RegisterDTO;
 import com.meteo.meteo.DTO.UserDTO;
@@ -53,16 +54,13 @@ public class UserServices {
         return jws;
     }
 
-    public Object login(LoginDTO loginDTO) {
-        System.out.println(loginDTO);
-        User userlogin = null;
-        userlogin = userRepository.getUserForLogin(loginDTO.getUsername());
-        if (passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) == false || userlogin == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+    public JwtDTO login(LoginDTO loginDTO) {
+        User userlogin =userRepository.getUserForLogin(loginDTO.getUsername());
+        if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null) {
+            return null;
         }
         {
-            String f = generateToken(userlogin);
-            return f;
+            return new JwtDTO( generateToken(userlogin));
         }
     }
 
