@@ -58,7 +58,7 @@ public class Activation {
         String to = getUserMail(token);
 
         // Sender's email ID needs to be mentioned
-        String from = "vshevtsov2022@gmail.com";
+        String from = "*****@gmail.com";
 
         // Assuming you are sending email from through gmails smtp
         String host = "smtp.gmail.com";
@@ -76,7 +76,7 @@ public class Activation {
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("vshevtsov2022@gmail.com", "*****");
+                return new PasswordAuthentication("****@gmail.com", "****");
             }
 
         });
