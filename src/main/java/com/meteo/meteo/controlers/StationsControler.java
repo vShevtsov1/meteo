@@ -1,5 +1,6 @@
 package com.meteo.meteo.controlers;
 
+import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.entities.Stations;
 
 
@@ -55,5 +56,6 @@ public class StationsControler {
         stationServices.save(stations);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
 
 }

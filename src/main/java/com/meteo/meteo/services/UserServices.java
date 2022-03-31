@@ -9,24 +9,15 @@ import com.meteo.meteo.exceptions.TokenException;
 import com.meteo.meteo.interfaces.UserRepository;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServices {
@@ -54,10 +45,10 @@ public class UserServices {
         return jws;
     }
 
-    public JwtDTO login(LoginDTO loginDTO) {
+    public Object login(LoginDTO loginDTO) {
         User userlogin =userRepository.getUserForLogin(loginDTO.getUsername());
         if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null) {
-            return null;
+            return ResponseEntity.badRequest();
         }
         {
             return new JwtDTO( generateToken(userlogin));

@@ -51,7 +51,7 @@ public class UserControler {
 
     @Operation(summary = "login a user into application")
     @PostMapping("/login")
-    public JwtDTO LoginUser(@RequestBody LoginDTO loginDTO) {
+    public Object LoginUser(@RequestBody LoginDTO loginDTO) {
         return userServices.login(loginDTO);
     }
     @Operation(summary = "Get user by e-mail")

@@ -1,5 +1,6 @@
 package com.meteo.meteo.services;
 
+import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.entities.Stations;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.exceptions.TokenException;
