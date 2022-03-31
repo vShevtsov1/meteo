@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Instant;
 
 import java.time.temporal.ChronoUnit;
@@ -25,11 +29,12 @@ public class UserServices {
     private String jwtSecret;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private Activation activation;
 
-
-    public UserServices(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServices(UserRepository userRepository, PasswordEncoder passwordEncoder, Activation activation) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.activation = activation;
     }
 
     public String generateToken(User user) {
@@ -44,17 +49,15 @@ public class UserServices {
         System.out.println(jwtSecret);
         return jws;
     }
-
-    public Object login(LoginDTO loginDTO) {
+    public JwtDTO login(LoginDTO loginDTO) {
         User userlogin =userRepository.getUserForLogin(loginDTO.getUsername());
         if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null) {
-            return ResponseEntity.badRequest();
+            return null;
         }
         {
             return new JwtDTO( generateToken(userlogin));
         }
     }
-
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
@@ -64,7 +67,6 @@ public class UserServices {
         }
         return false;
     }
-
     public String getUserRole(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -72,8 +74,6 @@ public class UserServices {
                 .getBody();
         return (String) claims.get("role");
     }
-
-
     public String getUserMail(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -81,7 +81,6 @@ public class UserServices {
                 .getBody();
         return claims.getSubject();
     }
-
     public List<User> getAll() {
         return userRepository.getAll();
     }
@@ -90,15 +89,31 @@ public class UserServices {
         return userRepository.getUserByIdUser(id);
     }
 
-    public UserDTO getUserByMail(String login) {
+    public User getUserByMail(String login) {
         return userRepository.getUserByMail(login);
     }
 
     public User save(RegisterDTO registerDTO) {
-         return userRepository.save(new User(registerDTO.getName(),registerDTO.getSurname(),registerDTO.getDateOfBirth()
-         ,registerDTO.getMail(),"user",passwordEncoder.encode(registerDTO.getPassword())));
+         User user = userRepository.save(new User(registerDTO.getName(),registerDTO.getSurname(),registerDTO.getDateOfBirth()
+         ,registerDTO.getMail(),"user",passwordEncoder.encode(registerDTO.getPassword()),false));
+        activation.sendEmail(activation.activationToken(user.getMail()));
+        return user;
     }
 
-
+    public void update(long id)
+    {
+        userRepository.updateUserActivation(id);
+    }
+    public Object changeActivation(String token)
+    {
+        if(validateToken(token)){
+            User user = getUserByMail(getUserMail(token));
+            update(user.getIdUser());
+            return ResponseEntity.ok();
+        }
+        else {
+            return ResponseEntity.badRequest();
+        }
+    }
 }
 

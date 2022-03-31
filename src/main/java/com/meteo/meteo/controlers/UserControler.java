@@ -4,17 +4,14 @@ import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.RegisterDTO;
 import com.meteo.meteo.DTO.UserDTO;
-import com.meteo.meteo.entities.User;
-import com.meteo.meteo.interfaces.UserRepository;
-import io.jsonwebtoken.Claims;
+import com.meteo.meteo.services.Activation;
+import com.meteo.meteo.services.UserServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import com.meteo.meteo.services.UserServices;
+
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,10 +20,12 @@ public class UserControler {
 
     private ModelMapper modelMapper;
     private UserServices userServices;
+    private Activation activation;
 
-    public UserControler(ModelMapper modelMapper, UserServices userServices) {
+    public UserControler(ModelMapper modelMapper, UserServices userServices, Activation activation) {
         this.modelMapper = modelMapper;
         this.userServices = userServices;
+        this.activation = activation;
     }
 
     @Operation(summary = "Get all users")
@@ -51,8 +50,13 @@ public class UserControler {
 
     @Operation(summary = "login a user into application")
     @PostMapping("/login")
-    public Object LoginUser(@RequestBody LoginDTO loginDTO) {
-        return userServices.login(loginDTO);
+    public ResponseEntity<JwtDTO> LoginUser(@RequestBody LoginDTO loginDTO) {
+        JwtDTO jwtDTO = userServices.login(loginDTO);
+        if(jwtDTO!=null)
+        {
+            return ResponseEntity.ok(jwtDTO);
+        }
+        return ResponseEntity.badRequest().build();
     }
     @Operation(summary = "Get user by e-mail")
     @GetMapping("email/{email}")
@@ -60,11 +64,9 @@ public class UserControler {
     {
         return modelMapper.map(userServices.getUserByMail(email), UserDTO.class);
     }
-    @Operation(summary = "CHeck token validity")
-    @GetMapping(path = "valid/{toke}")
-    public Boolean validateToken(@Parameter(description = "token to be checked")@PathVariable("token") String token)
+    @GetMapping("/activation")
+    public void activation(@RequestParam String token)
     {
-        return userServices.validateToken(token);
+        userServices.changeActivation(token);
     }
-
 }

@@ -10,4 +10,5 @@ public class UserDTO {
     private String  dateOfBirth;
     private String mail;
     private String role;
+    private Boolean active;
 }
