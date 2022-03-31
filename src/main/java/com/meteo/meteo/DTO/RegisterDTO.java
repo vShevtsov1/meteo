@@ -6,15 +6,15 @@ import lombok.Data;
 public class RegisterDTO {
     private String name;
     private String surname;
-    private String  dateOfBirth;
-    private String mail;
+    private String dateOfBirth;
+    private String email;
     private String password;
 
-    public RegisterDTO(String name, String surname, String dateOfBirth, String mail, String password) {
+    public RegisterDTO(String name, String surname, String dateOfBirth, String email, String password) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
-        this.mail = mail;
+        this.email = email;
         this.password = password;
     }
 }

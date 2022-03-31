@@ -50,7 +50,7 @@ public class UserServices {
         return jws;
     }
     public JwtDTO login(LoginDTO loginDTO) {
-        User userlogin =userRepository.getUserForLogin(loginDTO.getUsername());
+        User userlogin =userRepository.getUserForLogin(loginDTO.getEmail());
         if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null||userlogin.getActive()==false
         ) {
             return null;
@@ -96,7 +96,7 @@ public class UserServices {
 
     public User save(RegisterDTO registerDTO) {
          User user = userRepository.save(new User(registerDTO.getName(),registerDTO.getSurname(),registerDTO.getDateOfBirth()
-         ,registerDTO.getMail(),"user",passwordEncoder.encode(registerDTO.getPassword()),false));
+         ,registerDTO.getEmail(),"user",passwordEncoder.encode(registerDTO.getPassword()),false));
         activation.sendEmail(activation.activationToken(user.getMail()));
         return user;
     }
