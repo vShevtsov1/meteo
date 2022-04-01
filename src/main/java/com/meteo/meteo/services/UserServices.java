@@ -18,8 +18,9 @@ public class UserServices {
     private ActivationService activationService;
     private TokenServices tokenServices;
 
-    public UserServices(UserRepository userRepository, ActivationService activationService, TokenServices tokenServices) {
+    public UserServices(UserRepository userRepository, PasswordEncoder passwordEncoder, ActivationService activationService, TokenServices tokenServices) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.activationService = activationService;
         this.tokenServices = tokenServices;
     }
