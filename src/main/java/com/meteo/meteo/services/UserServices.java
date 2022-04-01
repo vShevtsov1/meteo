@@ -1,88 +1,40 @@
 package com.meteo.meteo.services;
 
+import com.meteo.meteo.Constants;
 import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.RegisterDTO;
-import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.User;
-import com.meteo.meteo.exceptions.TokenException;
-import com.meteo.meteo.interfaces.UserRepository;
-import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Value;
+import com.meteo.meteo.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.Instant;
-
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class UserServices {
-    @Value("${jwt.secret}")
-    private String jwtSecret;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private Activation activation;
+    private TokenServices tokenServices;
 
-    public UserServices(UserRepository userRepository, PasswordEncoder passwordEncoder, Activation activation) {
+    public UserServices(UserRepository userRepository, Activation activation, TokenServices tokenServices) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.activation = activation;
+        this.tokenServices = tokenServices;
     }
 
-    public String generateToken(User user) {
-        Date date = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
-        String jws = Jwts.builder().
-                setSubject(user.getMail()).
-                claim("name", user.getName()).
-                claim("surname", user.getSurname()).
-                claim("role", user.getRole()).
-                setExpiration(date).
-                signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
-        System.out.println(jwtSecret);
-        return jws;
-    }
     public JwtDTO login(LoginDTO loginDTO) {
-        System.out.println(loginDTO);
-        User userlogin =userRepository.getUserForLogin(loginDTO.getEmail());
-        if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null||userlogin.getActive()==false
-        ) {
+        User userlogin = userRepository.getUserForLogin(loginDTO.getEmail());
+        if (!passwordEncoder.matches(loginDTO.getPassword(), userlogin.getPassword()) || userlogin == null || userlogin.getActive() == false) {
             return null;
         }
         {
-            return new JwtDTO( generateToken(userlogin));
+            return new JwtDTO(tokenServices.generateTokenUser(userlogin));
         }
     }
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-            return true;
-        } catch (JwtException e) {
-            new TokenException("invalid token");
-        }
-        return false;
-    }
-    public String getUserRole(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-        return (String) claims.get("role");
-    }
-    public String getUserMail(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
-    }
+
     public List<User> getAll() {
         return userRepository.getAll();
     }
@@ -96,25 +48,23 @@ public class UserServices {
     }
 
     public User save(RegisterDTO registerDTO) {
-         User user = userRepository.save(new User(registerDTO.getName(),registerDTO.getSurname(),registerDTO.getDateOfBirth()
-         ,registerDTO.getEmail(),"user",passwordEncoder.encode(registerDTO.getPassword()),false));
-        activation.sendEmail(activation.activationToken(user.getMail()));
+        User user = userRepository.save(new User(registerDTO.getName(), registerDTO.getSurname(), registerDTO.getDateOfBirth()
+                , registerDTO.getEmail(),Constants.user.toString(), passwordEncoder.encode(registerDTO.getPassword()), false));
+        activation.sendEmail(tokenServices.activationToken(user.getMail()));
         return user;
     }
 
-    public void update(long id)
-    {
+    public void update(long id) {
         userRepository.updateUserActivation(id);
     }
-    public Object changeActivation(String token)
-    {
-        if(validateToken(token)){
-            User user = getUserByMail(getUserMail(token));
+
+    public ResponseEntity changeActivation(String token) {
+        if (tokenServices.validateToken(token)) {
+            User user = getUserByMail(tokenServices.getMail(token));
             update(user.getIdUser());
-            return ResponseEntity.ok();
-        }
-        else {
-            return ResponseEntity.badRequest();
+            return ResponseEntity.ok("Account status for user " + user.getMail() + " completely changed");
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

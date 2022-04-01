@@ -1,4 +1,4 @@
-package com.meteo.meteo.interfaces;
+package com.meteo.meteo.repositories;
 
 import com.meteo.meteo.entities.Stations;
 import org.springframework.data.repository.CrudRepository;

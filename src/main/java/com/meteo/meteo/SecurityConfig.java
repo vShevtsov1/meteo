@@ -61,11 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Set permissions on endpoints
         http.authorizeRequests()
                 // Swagger endpoints must be publicly accessible
-                .mvcMatchers("/api/users/login").permitAll()
+                .mvcMatchers("/users/login").permitAll()
                 .mvcMatchers("/compileddata/savevalue").hasAnyRole("stations")
-                .mvcMatchers("/api/users/save").permitAll()
+                .mvcMatchers("/users/save").permitAll()
                 .mvcMatchers(AUTH_WHITELIST).permitAll()
-                .mvcMatchers("/api/users/activation").permitAll()
+                .mvcMatchers("/users/activation").permitAll()
                 // Our private endpoints
                 .anyRequest().authenticated();
         // Add JWT token filter
