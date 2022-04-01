@@ -49,7 +49,7 @@ public class UserServices {
 
     public User save(RegisterDTO registerDTO) {
         User user = userRepository.save(new User(registerDTO.getName(), registerDTO.getSurname(), registerDTO.getDateOfBirth()
-                , registerDTO.getEmail(), Roles.user, passwordEncoder.encode(registerDTO.getPassword()), false));
+                , registerDTO.getEmail(), Roles.user.toString(), passwordEncoder.encode(registerDTO.getPassword()), false));
         activationService.sendEmail(tokenServices.activationToken(user.getMail()));
         return user;
     }
