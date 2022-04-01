@@ -51,7 +51,7 @@ public class StationsControler {
 
     @Operation(summary = "Update info about the station")
     @PostMapping("/update")
-    public ResponseEntity updateStations(@RequestBody Stations stations) {
+    public ResponseEntity<Stations> updateStations(@RequestBody Stations stations) {
         try {
             return ResponseEntity.ok(stationServices.save(stations));
         } catch (Exception e) {

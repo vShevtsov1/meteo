@@ -1,5 +1,5 @@
 package com.meteo.meteo;
 
-public enum Constants {
+public enum Roles {
     user,station
 }

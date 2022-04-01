@@ -3,15 +3,12 @@ package com.meteo.meteo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.slf4j.Logger;
-import javax.servlet.http.HttpServletResponse;
 
-import static java.lang.String.format;
+import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -34,7 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
             "/swagger-ui/**"
-            // other public endpoints of your API may be appended to this array
     };
 
 
@@ -62,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // Swagger endpoints must be publicly accessible
                 .mvcMatchers("/users/login").permitAll()
-                .mvcMatchers("/compileddata/savevalue").hasAnyRole("stations")
+                .mvcMatchers("/compileddata/savevalue").hasAnyRole(String.valueOf(Roles.station))
                 .mvcMatchers("/users/save").permitAll()
                 .mvcMatchers(AUTH_WHITELIST).permitAll()
                 .mvcMatchers("/users/activation").permitAll()

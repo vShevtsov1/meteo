@@ -1,6 +1,6 @@
 package com.meteo.meteo.services;
 
-import com.meteo.meteo.Constants;
+import com.meteo.meteo.Roles;
 import com.meteo.meteo.entities.Stations;
 import com.meteo.meteo.entities.User;
 import io.jsonwebtoken.Claims;
@@ -32,7 +32,7 @@ public class TokenServices {
         Date date = Date.from(Instant.now().plus(1, ChronoUnit.YEARS));
         String jws = Jwts.builder().
                 setSubject(String.valueOf(station.getIdStations())).
-                claim("role", Constants.station.toString()).
+                claim("role", Roles.station).
                 setExpiration(date).
                 signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
         System.out.println(jwtSecret);

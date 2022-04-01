@@ -4,7 +4,6 @@ import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.RegisterDTO;
 import com.meteo.meteo.DTO.UserDTO;
-import com.meteo.meteo.services.Activation;
 import com.meteo.meteo.services.UserServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -68,6 +67,13 @@ public class UserControler {
 
     @GetMapping("/activation")
     public ResponseEntity activation(@RequestParam String token) {
-       return userServices.changeActivation(token);
+        if(userServices.changeActivation(token))
+        {
+            return ResponseEntity.ok().build();
+        }
+        else
+        {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

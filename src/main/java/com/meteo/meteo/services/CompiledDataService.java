@@ -24,8 +24,7 @@ public class CompiledDataService {
     public Date getDateBefore(long days) {
         Instant now = Instant.now();
         Instant before = now.minus(Duration.ofDays(days));
-        Date dateBefore = Date.from(before);
-        return dateBefore;
+        return Date.from(before);
     }
 
     public CompiledData setDataToTable(CompiledDataDTO json){

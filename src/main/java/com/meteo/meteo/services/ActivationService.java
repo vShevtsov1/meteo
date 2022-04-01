@@ -18,13 +18,13 @@ import java.util.Date;
 import java.util.Properties;
 
 @Service
-public class Activation {
+public class ActivationService {
     @Value("${jwt.secret}")
     private String jwtSecret;
     private final HttpServletRequest request;
     private final TokenServices tokenServices;
 
-    public Activation(HttpServletRequest request, TokenServices tokenServices) {
+    public ActivationService(HttpServletRequest request, TokenServices tokenServices) {
         this.request = request;
         this.tokenServices = tokenServices;
     }
@@ -35,8 +35,7 @@ public class Activation {
         return requestURL.getProtocol() + "://" + requestURL.getHost() + port;
     }
 
-    public void sendEmail(String token)
-    {
+    public void sendEmail(String token) {
         // Recipient's email ID needs to be mentioned.
         String to = tokenServices.getMail(token);
 
@@ -80,9 +79,8 @@ public class Activation {
             // Set Subject: header field
             message.setSubject("Confrim e-mail in meteo-collector app");
 
-            String link = "<h1>To confirm your e-mail, follow this link</h1>"+"<a href = "+getURLBase(request)+"/users/activation?token="
-                    +token+">click here</a>";
-
+            String link = "<h1>To confirm your e-mail, follow this link</h1>" + "<a href = " + getURLBase(request) + "/users/activation?token="
+                    + token + ">click here</a>";
             message.setContent(link, "text/html");
             // Now set the actual message
             System.out.println("sending...");

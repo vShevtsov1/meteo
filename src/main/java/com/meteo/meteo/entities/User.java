@@ -1,6 +1,8 @@
 package com.meteo.meteo.entities;
 
+import com.meteo.meteo.Roles;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -16,11 +18,12 @@ public class User {
     private String surname;
     private String  dateOfBirth;
     private String mail;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Roles role;
     private String password;
     private Boolean active;
 
-    public User(String name, String surname, String dateOfBirth, String mail, String role, String password,Boolean active) {
+    public User(String name, String surname, String dateOfBirth, String mail, Roles role, String password,Boolean active) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;

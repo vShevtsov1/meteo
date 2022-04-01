@@ -1,12 +1,11 @@
 package com.meteo.meteo.services;
 
-import com.meteo.meteo.Constants;
 import com.meteo.meteo.DTO.JwtDTO;
 import com.meteo.meteo.DTO.LoginDTO;
 import com.meteo.meteo.DTO.RegisterDTO;
+import com.meteo.meteo.Roles;
 import com.meteo.meteo.entities.User;
 import com.meteo.meteo.repositories.UserRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,12 @@ import java.util.List;
 public class UserServices {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-    private Activation activation;
+    private ActivationService activationService;
     private TokenServices tokenServices;
 
-    public UserServices(UserRepository userRepository, Activation activation, TokenServices tokenServices) {
+    public UserServices(UserRepository userRepository, ActivationService activationService, TokenServices tokenServices) {
         this.userRepository = userRepository;
-        this.activation = activation;
+        this.activationService = activationService;
         this.tokenServices = tokenServices;
     }
 
@@ -49,8 +48,8 @@ public class UserServices {
 
     public User save(RegisterDTO registerDTO) {
         User user = userRepository.save(new User(registerDTO.getName(), registerDTO.getSurname(), registerDTO.getDateOfBirth()
-                , registerDTO.getEmail(),Constants.user.toString(), passwordEncoder.encode(registerDTO.getPassword()), false));
-        activation.sendEmail(tokenServices.activationToken(user.getMail()));
+                , registerDTO.getEmail(), Roles.user, passwordEncoder.encode(registerDTO.getPassword()), false));
+        activationService.sendEmail(tokenServices.activationToken(user.getMail()));
         return user;
     }
 
@@ -58,13 +57,13 @@ public class UserServices {
         userRepository.updateUserActivation(id);
     }
 
-    public ResponseEntity changeActivation(String token) {
+    public Boolean changeActivation(String token) {
         if (tokenServices.validateToken(token)) {
             User user = getUserByMail(tokenServices.getMail(token));
             update(user.getIdUser());
-            return ResponseEntity.ok("Account status for user " + user.getMail() + " completely changed");
+            return true;
         } else {
-            return ResponseEntity.badRequest().build();
+            return false;
         }
     }
 }
