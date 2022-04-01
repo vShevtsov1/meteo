@@ -21,6 +21,8 @@ import java.util.Properties;
 public class ActivationService {
     @Value("${jwt.secret}")
     private String jwtSecret;
+    @Value("${MAIL_PASSWORD}")
+    private String password;
     private final HttpServletRequest request;
     private final TokenServices tokenServices;
 
@@ -40,7 +42,7 @@ public class ActivationService {
         String to = tokenServices.getMail(token);
 
         // Sender's email ID needs to be mentioned
-        String from = "*****@gmail.com";
+        String from = "vshevtsov2022@gmail.com";
 
         // Assuming you are sending email from through gmails smtp
         String host = "smtp.gmail.com";
@@ -58,7 +60,7 @@ public class ActivationService {
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("****@gmail.com", "****");
+                return new PasswordAuthentication("vshevtsov2022@gmail.com", password);
             }
 
         });

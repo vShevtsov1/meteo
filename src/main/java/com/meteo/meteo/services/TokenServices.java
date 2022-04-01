@@ -29,7 +29,7 @@ public class TokenServices {
         return jws;
     }
     public String generateTokenStation(Stations station) {
-        Date date = Date.from(Instant.now().plus(1, ChronoUnit.YEARS));
+        Date date = Date.from(Instant.now().plus(365, ChronoUnit.DAYS));
         String jws = Jwts.builder().
                 setSubject(String.valueOf(station.getIdStations())).
                 claim("role", Roles.station).

@@ -20,15 +20,12 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private TokenServices tokenServices;
-    private UserServices userServices;
+    private  TokenServices tokenServices;
 
-    public JwtTokenFilter(TokenServices tokenServices, UserServices userServices) {
+    public JwtTokenFilter(TokenServices tokenServices) {
         this.tokenServices = tokenServices;
-        this.userServices = userServices;
     }
 
     @Override
