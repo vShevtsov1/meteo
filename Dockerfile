@@ -1,5 +1,5 @@
 # Stage 1 Build
-FROM openjdk:16 AS build
+FROM openjdk:11 AS build
 
 # Change work directory inside container
 WORKDIR /app
@@ -12,7 +12,7 @@ RUN ./mvnw package -Dmaven.test.skip
 
 
 # Stage 2 Package
-FROM openjdk:16
+FROM openjdk:11
 
 # Copy builded app from previous "build" container to a new openjdk container
 COPY --from=build /app/target/meteo-0.0.1-SNAPSHOT.jar /app/meteo.jar
