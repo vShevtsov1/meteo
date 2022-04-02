@@ -10,3 +10,6 @@ build-and-push:
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}:latest"
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
+
+staging:
+  trigger: meteo2/meteo-k3s-manifests/
