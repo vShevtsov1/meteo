@@ -20,4 +20,4 @@ staging:
   image:
     name: curlimages/curl:latest
   script:
-  - curl -X POST --fail -F token=${CI_JOB_TOKEN} -F ref=REF_NAME https://gitlab.science.upjs.sk/api/v4/projects/738/trigger/pipeline
+  - ccurl -X POST --fail -F token=${CI_JOB_TOKEN} -F ref=main https://gitlab.science.upjs.sk/api/v4/projects/738/trigger/pipeline
