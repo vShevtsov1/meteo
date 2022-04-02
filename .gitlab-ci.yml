@@ -1,4 +1,8 @@
+stages:
+  - build
+  - deploy
 build-and-push:
+  stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
   script:
@@ -12,4 +16,5 @@ build-and-push:
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
 
 staging:
+  stage: deploy
   trigger: meteo2/meteo-k3s-manifests/
