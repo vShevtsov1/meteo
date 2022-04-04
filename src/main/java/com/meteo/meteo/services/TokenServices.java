@@ -35,7 +35,6 @@ public class TokenServices {
                 claim("role", Roles.station).
                 setExpiration(date).
                 signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
-        System.out.println(jwtSecret);
         return jws;
     }
 
@@ -45,7 +44,6 @@ public class TokenServices {
                 setSubject(email).
                 setExpiration(date).
                 signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
-        System.out.println(jwtSecret);
         return jws;
     }
 
