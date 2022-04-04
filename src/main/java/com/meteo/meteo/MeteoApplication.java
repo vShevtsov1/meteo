@@ -30,7 +30,7 @@ public class MeteoApplication {
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
 
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args){
         SpringApplication.run(MeteoApplication.class, args);
     }
 }
