@@ -17,15 +17,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/compileddata")
-public class CompiledDataControler {
+public class CompiledDataController {
 
 
-    private CompiledDataService compiledDataService;
+    private final CompiledDataService compiledDataService;
 
-    public CompiledDataControler(CompiledDataService compiledDataService) {
+    public CompiledDataController(CompiledDataService compiledDataService) {
         this.compiledDataService = compiledDataService;
     }
-
     @Operation(summary = "Get all data")
     @GetMapping()
     public Iterable<CompiledData> getAll() {

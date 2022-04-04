@@ -19,8 +19,11 @@ import java.util.Properties;
 
 @Service
 public class ActivationService {
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+
+    @Value("${meteo.email.user}")
+    private String mailUser;
+    @Value("${meteo.email.password}")
+    private String mailPassword;
     private final HttpServletRequest request;
     private final TokenServices tokenServices;
 
@@ -40,7 +43,7 @@ public class ActivationService {
         String to = tokenServices.getMail(token);
 
         // Sender's email ID needs to be mentioned
-        String from = "vshevtsov2022@gmail.com";
+        String from = mailUser;
 
         // Assuming you are sending email from through gmails smtp
         String host = "smtp.gmail.com";
@@ -58,7 +61,7 @@ public class ActivationService {
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("vshevtsov2022@gmail.com", "fdsfsd");
+                return new PasswordAuthentication(mailUser, mailPassword);
             }
 
         });

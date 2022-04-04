@@ -8,19 +8,21 @@ import com.meteo.meteo.services.UserServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/users")
-public class UserControler {
+public class UserController {
 
-    private ModelMapper modelMapper;
-    private UserServices userServices;
+    private final ModelMapper modelMapper;
+    private final UserServices userServices;
 
-    public UserControler(ModelMapper modelMapper, UserServices userServices) {
+    public UserController(ModelMapper modelMapper, UserServices userServices) {
         this.modelMapper = modelMapper;
         this.userServices = userServices;
     }
@@ -43,12 +45,6 @@ public class UserControler {
         }
     }
 
-    @Operation(summary = "Get user by id")
-    @GetMapping("id/{id}")
-    public UserDTO getById(@Parameter(description = "id of user to be searched") @PathVariable("id") long id) {
-        return modelMapper.map(userServices.getUserByIdUser(id), UserDTO.class);
-    }
-
     @Operation(summary = "Login a user into application")
     @PostMapping("/login")
     public ResponseEntity<JwtDTO> LoginUser(@RequestBody LoginDTO loginDTO) {
@@ -60,19 +56,16 @@ public class UserControler {
     }
 
     @Operation(summary = "Get user by e-mail")
-    @GetMapping("email/{email}")
-    public UserDTO getUserByEmail(@PathVariable("email") String email) {
-        return modelMapper.map(userServices.getUserByMail(email), UserDTO.class);
+    @GetMapping("/email")
+    public UserDTO getUserByEmail(Authentication authentication) {
+        return modelMapper.map(userServices.getUserByMail((String) authentication.getPrincipal()), UserDTO.class);
     }
 
     @GetMapping("/activation")
-    public ResponseEntity activation(@RequestParam String token) {
-        if(userServices.changeActivation(token))
-        {
+    public ResponseEntity<Object> activation(@RequestParam String token) {
+        if (userServices.changeActivation(token)) {
             return ResponseEntity.ok().build();
-        }
-        else
-        {
+        } else {
             return ResponseEntity.badRequest().build();
         }
     }

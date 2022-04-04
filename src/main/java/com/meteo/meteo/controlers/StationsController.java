@@ -1,23 +1,29 @@
 package com.meteo.meteo.controlers;
 
 import com.meteo.meteo.DTO.JwtDTO;
+import com.meteo.meteo.DTO.StationDTO;
+import com.meteo.meteo.DTO.UserDTO;
 import com.meteo.meteo.entities.Stations;
 import com.meteo.meteo.services.StationServices;
 import io.swagger.v3.oas.annotations.Operation;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/stations")
-public class StationsControler {
+public class StationsController {
 
-    private StationServices stationServices;
+    private final StationServices stationServices;
+    private final ModelMapper modelMapper;
 
-    public StationsControler(StationServices stationServices) {
+    public StationsController(StationServices stationServices, ModelMapper modelMapper) {
         this.stationServices = stationServices;
+        this.modelMapper = modelMapper;
     }
 
     @Operation(summary = "Get all stations data")
@@ -35,24 +41,31 @@ public class StationsControler {
 
     @Operation(summary = "Get station by owner e-mail")
     @GetMapping(path = "ownermail/{email}")
-    public List<Stations> getByOwnerMail(@PathVariable("email") String email) {
-        return stationServices.getStationsByOwnerEmail(email);
+    public List<Stations> getByOwnerMail(Authentication authentication) {
+        return stationServices.getStationsByOwnerEmail((String) authentication.getPrincipal());
     }
 
     @Operation(summary = "Save a new station")
     @PostMapping("/save")
-    public ResponseEntity<Stations> saveNewStations(@RequestBody Stations newStation) {
+    public ResponseEntity<Stations> saveNewStations(@RequestBody StationDTO newStation, Authentication authentication) {
         try {
-            return ResponseEntity.ok(stationServices.save(newStation));
+            Stations stations = stationServices.save(modelMapper.map(newStation, Stations.class));
+            stations.setOwnerEmail((String) authentication.getPrincipal());
+            return ResponseEntity.ok(stationServices.save(stations));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @Operation(summary = "Update info about the station")
-    @PostMapping("/update")
-    public ResponseEntity<Stations> updateStations(@RequestBody Stations stations) {
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Stations> updateStations(@RequestBody StationDTO stationDTO,
+                                                   Authentication authentication,
+                                                   @RequestParam("id") long id) {
         try {
+            Stations stations = stationServices.save(modelMapper.map(stationDTO, Stations.class));
+            stations.setOwnerEmail((String) authentication.getPrincipal());
+            stations.setIdStations(id);
             return ResponseEntity.ok(stationServices.save(stations));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -61,9 +74,9 @@ public class StationsControler {
 
     @Operation(summary = "Get tok for the station")
     @GetMapping(path = "/generate/token")
-    public ResponseEntity<JwtDTO> generateToken(@RequestBody Stations stations) {
+    public ResponseEntity<JwtDTO> generateToken(@RequestBody long stationsId) {
         try {
-            return ResponseEntity.ok(stationServices.generateToken(stations));
+            return ResponseEntity.ok(stationServices.generateToken(stationsId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

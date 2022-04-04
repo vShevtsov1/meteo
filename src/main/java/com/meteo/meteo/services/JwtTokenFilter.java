@@ -1,4 +1,4 @@
-package com.meteo.meteo;
+package com.meteo.meteo.services;
 
 import com.meteo.meteo.services.TokenServices;
 import com.meteo.meteo.services.UserServices;

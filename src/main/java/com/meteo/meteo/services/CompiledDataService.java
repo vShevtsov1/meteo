@@ -27,7 +27,7 @@ public class CompiledDataService {
         return Date.from(before);
     }
 
-    public CompiledData setDataToTable(CompiledDataDTO json){
+    public CompiledData setDataToTable(CompiledDataDTO json) {
         return compiledDataRepository.save(new CompiledData(json.getStationId(), json.getDatetime(), json.getSensor(), json.getUnit(), json.getValue()));
     }
 

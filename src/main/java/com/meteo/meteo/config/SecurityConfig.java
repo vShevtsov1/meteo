@@ -1,5 +1,7 @@
-package com.meteo.meteo;
+package com.meteo.meteo.config;
 
+import com.meteo.meteo.services.JwtTokenFilter;
+import com.meteo.meteo.entities.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
             "/swagger-ui/**"
-        };
+    };
 
 
     @Override
@@ -62,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/users/save").permitAll()
                 .mvcMatchers(AUTH_WHITELIST).permitAll()
                 .mvcMatchers("/users/activation").permitAll()
+                .mvcMatchers("/users").hasRole(String.valueOf(Roles.admin))
                 // Our private endpoints
                 .anyRequest().authenticated();
         // Add JWT token filter

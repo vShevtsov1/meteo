@@ -1,7 +1,6 @@
 package com.meteo.meteo.services;
 
-import com.meteo.meteo.Roles;
-import com.meteo.meteo.entities.Stations;
+import com.meteo.meteo.entities.Roles;
 import com.meteo.meteo.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -28,16 +27,18 @@ public class TokenServices {
                 signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
         return jws;
     }
-    public String generateTokenStation(Stations station) {
+
+    public String generateTokenStation(long station) {
         Date date = Date.from(Instant.now().plus(365, ChronoUnit.DAYS));
         String jws = Jwts.builder().
-                setSubject(String.valueOf(station.getIdStations())).
+                setSubject(String.valueOf(station)).
                 claim("role", Roles.station).
                 setExpiration(date).
                 signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
         System.out.println(jwtSecret);
         return jws;
     }
+
     public String activationToken(String email) {
         Date date = Date.from(Instant.now().plus(24, ChronoUnit.HOURS));
         String jws = Jwts.builder().

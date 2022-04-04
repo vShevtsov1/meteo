@@ -35,7 +35,7 @@ public class StationServices {
         return stationsRepository.save(newStation);
     }
 
-    public JwtDTO generateToken(Stations stations) {
+    public JwtDTO generateToken(long stations) {
         return new JwtDTO(tokenServices.generateTokenStation(stations));
     }
 
