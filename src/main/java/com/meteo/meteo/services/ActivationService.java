@@ -39,6 +39,8 @@ public class ActivationService {
     }
 
     public void sendEmail(String token) {
+        System.out.println(mailUser);
+        System.out.println(mailPassword);
         // Recipient's email ID needs to be mentioned.
         String to = tokenServices.getMail(token);
 
