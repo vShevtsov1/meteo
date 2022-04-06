@@ -9,6 +9,7 @@ import com.meteo.meteo.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.NoSuchProviderException;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class UserServices {
         return userRepository.getUserByMail(login);
     }
 
-    public User save(RegisterDTO registerDTO) {
+    public User save(RegisterDTO registerDTO) throws NoSuchProviderException {
         User user = userRepository.save(new User(registerDTO.getName(), registerDTO.getSurname(), registerDTO.getDateOfBirth(),
                 registerDTO.getEmail(), Roles.user, passwordEncoder.encode(registerDTO.getPassword()), false));
         activationService.sendEmail(tokenServices.activationToken(user.getMail()));

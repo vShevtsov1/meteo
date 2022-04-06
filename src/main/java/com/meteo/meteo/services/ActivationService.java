@@ -38,7 +38,7 @@ public class ActivationService {
         return requestURL.getProtocol() + "://" + requestURL.getHost() + port;
     }
 
-    public void sendEmail(String token) {
+    public void sendEmail(String token) throws NoSuchProviderException {
         System.out.println(mailUser);
         System.out.println(mailPassword);
         // Recipient's email ID needs to be mentioned.
@@ -54,22 +54,19 @@ public class ActivationService {
         Properties properties = System.getProperties();
 
         // Setup mail server
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.transport.protocol", "smtps");
+        properties.put("mail.smtps.starttls.enable","true");
+        properties.put("mail.smtps.host", host);
+        properties.put("mail.smtps.port", "465");
+        //properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtps.auth", "true");
 
         // Get the Session object.// and pass username and password
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(mailUser, mailPassword);
-            }
-
-        });
+        Session session = Session.getDefaultInstance(properties);
 
         // Used to debug SMTP issues
         session.setDebug(true);
+        Transport transport = session.getTransport();
 
         try {
             // Create a default MimeMessage object.
@@ -84,14 +81,18 @@ public class ActivationService {
             // Set Subject: header field
             message.setSubject("Confrim e-mail in meteo-collector app");
 
-            String link = "<h1>To confirm your e-mail, follow this link</h1>" + "<a href = " + getURLBase(request) + "/users/activation?token="
+            String link = "<h1>To confirm your e-mail, follow this link</h1>" + "<a href = " + getURLBase(request) + "/api/users/activation?token="
                     + token + ">click here</a>";
             message.setContent(link, "text/html");
             // Now set the actual message
             System.out.println("sending...");
             // Send message
-            Transport.send(message);
+            transport.connect
+                    ("smtp.gmail.com", 465, mailUser, mailPassword);
+
+            transport.sendMessage(message,message.getRecipients(Message.RecipientType.TO));
             System.out.println("Sent message successfully....");
+            transport.close();
         } catch (MessagingException | MalformedURLException mex) {
             mex.printStackTrace();
         }

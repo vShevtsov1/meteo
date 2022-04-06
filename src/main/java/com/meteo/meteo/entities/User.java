@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name="users")
+@Table(name="users",uniqueConstraints = { @UniqueConstraint(columnNames = { "mail"})})
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -15,7 +15,6 @@ public class User {
     private String name;
     private String surname;
     private String  dateOfBirth;
-    @Column(unique=true)
     private String mail;
     @Enumerated(EnumType.STRING)
     private Roles role;
