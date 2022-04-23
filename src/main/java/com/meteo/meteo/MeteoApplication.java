@@ -11,5 +11,6 @@ public class MeteoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MeteoApplication.class, args);
+        
     }
 }

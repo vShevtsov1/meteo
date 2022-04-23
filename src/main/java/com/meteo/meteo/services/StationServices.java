@@ -39,4 +39,6 @@ public class StationServices {
         return new JwtDTO(tokenServices.generateTokenStation(stations));
     }
 
+   /* public List<Stations> getAllActive(){return  stationsRepository.getAllActiveStation();}*/
+
 }

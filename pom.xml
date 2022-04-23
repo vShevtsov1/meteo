@@ -80,10 +80,16 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.11.3</version>
         </dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.0.0</version>
+            </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
