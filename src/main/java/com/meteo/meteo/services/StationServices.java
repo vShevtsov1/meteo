@@ -1,8 +1,10 @@
 package com.meteo.meteo.services;
 
 import com.meteo.meteo.DTO.JwtDTO;
+import com.meteo.meteo.Exceptions.OwnerException;
 import com.meteo.meteo.entities.Stations;
 import com.meteo.meteo.repositories.StationsRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +37,13 @@ public class StationServices {
         return stationsRepository.save(newStation);
     }
 
-    public JwtDTO generateToken(long stations) {
-        return new JwtDTO(tokenServices.generateTokenStation(stations));
+    public JwtDTO generateToken(long stations, Authentication authentication) throws Exception {
+        if(stationsRepository.getStationsByIdStations(stations).getOwnerEmail().equals(authentication.getPrincipal()))
+        {
+            return new JwtDTO(tokenServices.generateTokenStation(stations));
+
+        }
+        throw new OwnerException("Bad owner");
     }
 
    /* public List<Stations> getAllActive(){return  stationsRepository.getAllActiveStation();}*/

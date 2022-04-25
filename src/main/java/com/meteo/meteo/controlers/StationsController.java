@@ -73,15 +73,14 @@ public class StationsController {
     }
 
     @Operation(summary = "Get tok for the station")
-    @GetMapping(path = "/generate/token/{id}")
-    public ResponseEntity<JwtDTO> generatetoken(@PathVariable("id") long id) {
+    @GetMapping(path = "/generate/token")
+    public ResponseEntity<JwtDTO> generatetoken(@RequestBody long id,Authentication authentication) {
         try {
-            return ResponseEntity.ok(stationServices.generateToken(id));
+            return ResponseEntity.ok(stationServices.generateToken(id,authentication));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
-
    /* @Operation(summary = "Get all active station")
     @GetMapping(path = "/active")
     public List<Stations> getAllActive()
