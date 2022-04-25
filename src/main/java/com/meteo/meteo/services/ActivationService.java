@@ -81,7 +81,7 @@ public class ActivationService {
             // Set Subject: header field
             message.setSubject("Confrim e-mail in meteo-collector app");
 
-            String link = "<h1>To confirm your e-mail, follow this link</h1>" + "<a href = " + getURLBase(request) + "/api/users/activation?token="
+            String link = "<h1>To confirm your e-mail, follow this link</h1>" + "<a href = " + getURLBase(request) + "/auth/activate?token="
                     + token + ">click here</a>";
             message.setContent(link, "text/html");
             // Now set the actual message
