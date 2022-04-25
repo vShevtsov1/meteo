@@ -7,6 +7,9 @@ import com.meteo.meteo.repositories.StationsRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,6 +49,10 @@ public class StationServices {
         throw new OwnerException("Bad owner");
     }
 
-   /* public List<Stations> getAllActive(){return  stationsRepository.getAllActiveStation();}*/
+   public List<Stations> getAllActive(){
+       Instant now = Instant.now();
+       Instant before = now.minus(Duration.ofDays(31));
+        return  stationsRepository.getAllActiveStation(Date.from(before));
+    }
 
 }

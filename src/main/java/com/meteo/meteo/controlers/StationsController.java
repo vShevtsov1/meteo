@@ -81,10 +81,10 @@ public class StationsController {
             return ResponseEntity.badRequest().build();
         }
     }
-   /* @Operation(summary = "Get all active station")
+    @Operation(summary = "Get all active station")
     @GetMapping(path = "/active")
     public List<Stations> getAllActive()
     {
         return stationServices.getAllActive();
-    }*/
+    }
 }
