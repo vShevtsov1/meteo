@@ -35,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**"
     };
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -65,6 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(AUTH_WHITELIST).permitAll()
                 .mvcMatchers("/users/activation").permitAll()
                 .mvcMatchers("/users").hasRole(String.valueOf(Roles.admin))
+                .mvcMatchers("/stations/active").permitAll()
+                .mvcMatchers("/compileddata").permitAll()
+                .mvcMatchers("/compileddata/id").permitAll()
                 // Our private endpoints
                 .anyRequest().authenticated();
         // Add JWT token filter
