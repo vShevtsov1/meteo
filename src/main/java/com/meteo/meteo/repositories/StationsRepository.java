@@ -11,6 +11,6 @@ import java.util.List;
 public interface StationsRepository extends CrudRepository<Stations,Integer> {
     Stations getStationsByIdStations(long id);
     List<Stations> getStationsByOwnerEmail(String email);
-    @Query("select DISTINCT s.id_stations,s.altitude,s.description,s.latitude,s.location,s.longitude,s.name,s.owner_email,s.sensors,s.type from stations s join compiled_data c on s.id_stations = c.station_id where c.datetime>:date")
+    @Query("select DISTINCT s from Stations s, CompiledData c where c.stationId=s.idStations and c.datetime>:date")
     List<Stations> getAllActiveStation(@Param("date") Date date);
 }

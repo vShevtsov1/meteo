@@ -52,7 +52,7 @@ public class StationServices {
    public List<Stations> getAllActive(){
        Instant now = Instant.now();
        Instant before = now.minus(Duration.ofDays(31));
-        return  stationsRepository.getAllActiveStation(Date.from(before));
+        return stationsRepository.getAllActiveStation(Date.from(before));
     }
 
 }
