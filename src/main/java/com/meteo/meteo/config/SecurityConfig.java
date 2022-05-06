@@ -67,6 +67,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/stations/active").permitAll()
                 .mvcMatchers("/compileddata").permitAll()
                 .mvcMatchers("/compileddata/id").permitAll()
+                .mvcMatchers("/users/resetpassword/email").permitAll()
+                .mvcMatchers("/users/resetpassword").permitAll()
+
                 // Our private endpoints
                 .anyRequest().authenticated();
         // Add JWT token filter

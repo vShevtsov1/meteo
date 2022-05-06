@@ -1,9 +1,6 @@
 package com.meteo.meteo.controlers;
 
-import com.meteo.meteo.DTO.JwtDTO;
-import com.meteo.meteo.DTO.LoginDTO;
-import com.meteo.meteo.DTO.RegisterDTO;
-import com.meteo.meteo.DTO.UserDTO;
+import com.meteo.meteo.DTO.*;
 import com.meteo.meteo.services.UserServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -60,7 +57,7 @@ public class UserController {
     public UserDTO getUserByEmail(Authentication authentication) {
         return modelMapper.map(userServices.getUserByMail((String) authentication.getPrincipal()), UserDTO.class);
     }
-
+    @Operation(summary = "Activate user account which was registered")
     @GetMapping("/activation")
     public ResponseEntity<Object> activation(@RequestParam String token) {
         if (userServices.changeActivation(token)) {
@@ -68,5 +65,33 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+    @Operation(summary = "Reset the password which was forgotten")
+    @PostMapping("/resetpassword")
+    public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordDTO password, @RequestParam String token) {
+        if(userServices.resetPassword(password, token)) {
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @Operation(summary = "Change the password if user remember his password")
+    @PostMapping("/changepassword")
+    public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordDTO password, @RequestParam String token) {
+        if(userServices.changedPassword(password, token)) {
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @Operation(summary = "Sending email to reset the forgotten password")
+    @PostMapping("/resetpassword/email")
+    public ResponseEntity<Object> sendEmail(@RequestBody String email) {
+        try {
+            userServices.sendEmailForChangingPassword(email);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }
