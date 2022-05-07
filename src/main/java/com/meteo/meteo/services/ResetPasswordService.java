@@ -74,7 +74,7 @@ public class ResetPasswordService {
             // Set Subject: header field
             message.setSubject("Reset password for"+ to + "in meteo-collector app");
 
-            String link = "<h1>To reset your password, follow this link</h1>" + "<a href = " + getURLBase(request) + "/users/changepassword?token=" + token + ">click here</a>";
+            String link = "<h1>To reset your password, follow this link</h1>" + "<a href = " + getURLBase(request) + "/auth/reset-password?token=" + token + ">click here</a>";
             message.setContent(link, "text/html");
             // Now set the actual message
             System.out.println("sending...");
