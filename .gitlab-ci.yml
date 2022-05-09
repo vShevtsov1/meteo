@@ -6,6 +6,9 @@ build-and-push:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
+  only:
+    - master
+    - meteoBranch
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
@@ -20,5 +23,7 @@ deploy:
   stage: deploy
   image:
     name: curlimages/curl:latest
+  only:
+    - master
   script:
   - curl -X POST --fail -F token=${K3S_JOB_TOKEN} -F ref=main https://gitlab.science.upjs.sk/api/v4/projects/738/trigger/pipeline
