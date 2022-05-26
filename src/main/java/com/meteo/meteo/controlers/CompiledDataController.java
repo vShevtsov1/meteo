@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.List;
@@ -71,11 +68,13 @@ public class CompiledDataController {
 
     @Operation(summary = "Save value received from stations to database")
     @GetMapping("/savevalue")
-    public ResponseEntity<CompiledData> save(@Parameter(description = "Received json with data from station and token") CompiledDataDTO compiledDataDTO) {
+    public ResponseEntity<CompiledData> save(@Parameter(description = "Received json with data from station and token") @RequestBody CompiledDataDTO compiledDataDTO) {
         try {
+            System.out.println(compiledDataDTO);
             return ResponseEntity.ok(compiledDataService.setDataToTable(compiledDataDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
+
 }

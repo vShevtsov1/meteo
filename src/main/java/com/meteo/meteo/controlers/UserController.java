@@ -75,6 +75,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @Operation(summary = "Change the password if user remember his password")
     @PostMapping("/changepassword")
     public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordDTO password, @RequestParam String token) {
