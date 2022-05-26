@@ -74,7 +74,7 @@ public class StationsController {
 
     @Operation(summary = "Get tok for the station")
     @GetMapping(path = "/generate/token")
-    public ResponseEntity<JwtDTO> generatetoken(@RequestBody long id,Authentication authentication) {
+    public ResponseEntity<JwtDTO> generatetoken(@RequestParam long id,Authentication authentication) {
         try {
             return ResponseEntity.ok(stationServices.generateToken(id,authentication));
         } catch (Exception e) {
