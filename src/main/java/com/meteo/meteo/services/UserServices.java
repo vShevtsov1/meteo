@@ -94,7 +94,7 @@ public class UserServices {
         }
     }
 
-    public void sendEmailForChangingPassword(String email) {
+    public void sendEmailForChangingPassword(String email) throws NoSuchProviderException {
         String token = tokenServices.activationToken(email);
         resetPasswordService.sendEmail(token);
     }

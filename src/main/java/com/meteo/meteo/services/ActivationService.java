@@ -48,7 +48,7 @@ public class ActivationService {
         String from = mailUser;
 
         // Assuming you are sending email from through gmails smtp
-        String host = "smtp.gmail.com";
+        String host = "smtp.office365.com";
 
         // Get system properties
         Properties properties = System.getProperties();
@@ -57,7 +57,7 @@ public class ActivationService {
         properties.put("mail.transport.protocol", "smtps");
         properties.put("mail.smtps.starttls.enable","true");
         properties.put("mail.smtps.host", host);
-        properties.put("mail.smtps.port", "465");
+        properties.put("mail.smtps.port", "587");
         //properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtps.auth", "true");
 
@@ -88,7 +88,7 @@ public class ActivationService {
             System.out.println("sending...");
             // Send message
             transport.connect
-                    ("smtp.gmail.com", 465, mailUser, mailPassword);
+                    ("smtp.office365.com", 587, mailUser, mailPassword);
 
             transport.sendMessage(message,message.getRecipients(Message.RecipientType.TO));
             System.out.println("Sent message successfully....");

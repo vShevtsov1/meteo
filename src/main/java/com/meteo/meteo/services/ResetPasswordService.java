@@ -30,7 +30,9 @@ public class ResetPasswordService {
         return requestURL.getProtocol() + "://" + requestURL.getHost() + port;
     }
 
-    public void sendEmail(String token) {
+    public void sendEmail(String token) throws NoSuchProviderException {
+        System.out.println(mailUser);
+        System.out.println(mailPassword);
         // Recipient's email ID needs to be mentioned.
         String to = tokenServices.getMail(token);
 
@@ -38,28 +40,25 @@ public class ResetPasswordService {
         String from = mailUser;
 
         // Assuming you are sending email from through gmails smtp
-        String host = "smtp.gmail.com";
+        String host = "smtp.office365.com";
 
         // Get system properties
         Properties properties = System.getProperties();
 
         // Setup mail server
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.transport.protocol", "smtps");
+        properties.put("mail.smtps.starttls.enable","true");
+        properties.put("mail.smtps.host", host);
+        properties.put("mail.smtps.port", "587");
+        //properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtps.auth", "true");
 
         // Get the Session object.// and pass username and password
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(mailUser, mailPassword);
-            }
-
-        });
+        Session session = Session.getDefaultInstance(properties);
 
         // Used to debug SMTP issues
         session.setDebug(true);
+        Transport transport = session.getTransport();
 
         try {
             // Create a default MimeMessage object.
@@ -79,8 +78,12 @@ public class ResetPasswordService {
             // Now set the actual message
             System.out.println("sending...");
             // Send message
-            Transport.send(message);
+            transport.connect
+                    ("smtp.office365.com", 587, mailUser, mailPassword);
+
+            transport.sendMessage(message,message.getRecipients(Message.RecipientType.TO));
             System.out.println("Sent message successfully....");
+            transport.close();
         } catch (MessagingException | MalformedURLException mex) {
             mex.printStackTrace();
         }
