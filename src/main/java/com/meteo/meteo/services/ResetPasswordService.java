@@ -46,11 +46,11 @@ public class ResetPasswordService {
         Properties properties = System.getProperties();
 
         // Setup mail server
-        properties.put("mail.smtps.starttls.enable","true");
-        properties.put("mail.smtps.port", "587");
-        properties.put("mail.smtps.host", host);
+        properties.put("mail.smtp.starttls.enable","true");
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.host", host);
         //properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtps.auth", "true");
+        properties.put("mail.smtp.auth", "true");
 
         // Get the Session object.// and pass username and password
         Session session = Session.getDefaultInstance(properties);
