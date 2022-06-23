@@ -54,10 +54,9 @@ public class ActivationService {
         Properties properties = System.getProperties();
 
         // Setup mail server
-        properties.put("mail.transport.protocol", "smtps");
         properties.put("mail.smtps.starttls.enable","true");
-        properties.put("mail.smtps.host", host);
         properties.put("mail.smtps.port", "587");
+        properties.put("mail.smtps.host", host);
         //properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtps.auth", "true");
 
